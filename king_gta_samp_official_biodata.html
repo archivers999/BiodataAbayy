@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P4NGERAN BIO - Official Player Profile</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,500;0,700;1,700&family=Permanent+Marker&family=VT323&display=swap" rel="stylesheet">
+    
+    <style>
+        /* GTA San Andreas Typography Fallbacks */
+        @font-face {
+            font-family: 'Pricedown';
+            src: url('https://fonts.cdnfonts.com/s/14299/pricedown bl.woff') format('woff');
+        }
+
+        :root {
+            --gta-green: #2bb673;
+            --gta-dark-green: #003713;
+            --gta-yellow: #f8c117;
+            --gta-red: #bb0d0d;
+            --gta-blue: #2358bc;
+            --gta-hud-font: 'VT323', monospace;
+        }
+
+        body {
+            background-color: #0b0f0b;
+            color: #e2e8f0;
+            font-family: 'Chakra Petch', sans-serif;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(18, 94, 36, 0.15) 0%, transparent 80%),
+                linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(5,20,8,0.95)),
+                url('https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+        }
+
+        .font-pricedown {
+            font-family: 'Pricedown', 'Impact', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .font-hud {
+            font-family: var(--gta-hud-font);
+        }
+
+        .font-street {
+            font-family: 'Permanent Marker', cursive;
+        }
+
+        /* Scanline effect */
+        .scanline {
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0, 0, 0, 0.3) 50%,
+                rgba(0, 0, 0, 0.3)
+            );
+            background-size: 100% 4px;
+        }
+
+        /* GTA Glass Box */
+        .gta-card {
+            background: rgba(12, 22, 14, 0.88);
+            border: 2px solid #1c4d25;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.15), inset 0 0 15px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(6px);
+        }
+
+        .gta-card-gold {
+            background: rgba(22, 18, 12, 0.88);
+            border: 2px solid #a87e11;
+            box-shadow: 0 0 15px rgba(248, 193, 23, 0.2);
+        }
+
+        .gta-border-glow {
+            box-shadow: 0 0 10px #00ff41;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #051408;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #125e24;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00ff41;
+        }
+
+        /* Animation Keyframes */
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(0.98); }
+        }
+        .pulse-effect {
+            animation: pulse-subtle 3s infinite ease-in-out;
+        }
+
+        @keyframes mission-passed-anim {
+            0% { transform: scale(0.3) rotate(-5deg); opacity: 0; }
+            70% { transform: scale(1.1) rotate(1deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        .animate-mission {
+            animation: mission-passed-anim 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* Radar Container & Interactive Canvas */
+        .radar-screen {
+            background: #030f16; /* Deep navy GTA SA ocean color */
+            border: 4px solid #222;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.95), inset 0 0 15px rgba(0, 255, 65, 0.25);
+            position: relative;
+            overflow: hidden;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .radar-screen:active {
+            cursor: grabbing;
+        }
+
+        .radar-sweep {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 250%;
+            height: 250%;
+            background: conic-gradient(from 0deg at 50% 50%, rgba(0, 255, 65, 0.25) 0deg, transparent 50deg, transparent 360deg);
+            transform-origin: 0% 0%;
+            animation: sweep 4s linear infinite;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        @keyframes sweep {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Overlay Effects */
+        .wasted-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(150, 0, 0, 0.4);
+            z-index: 9999;
+            backdrop-filter: grayscale(80%) sepia(30%);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hesoyam-flash {
+            animation: flash-green 0.5s ease-out;
+        }
+
+        @keyframes flash-green {
+            0% { background-color: rgba(0, 255, 65, 0.4); }
+            100% { background-color: transparent; }
+        }
+    </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden antialiased scanline bg-gradient-to-br from-black via-zinc-900 to-amber-950 text-white">
+    
+</body> class="min-h-screen relative overflow-x-hidden antialiased scanline">
+
+    <!-- Wasted / Busted Overlay -->
+    <div id="wastedOverlay" class="wasted-overlay flex-col">
+        <h1 class="font-pricedown text-7xl md:text-9xl text-red-600 tracking-wider drop-shadow-[0_5px_5px_rgba(0,0,0,1)] animate-bounce">
+            WASTED
+        </h1>
+        <p class="text-white font-hud text-2xl mt-4 bg-black/80 px-4 py-1 rounded">CHEAT ACTIVATED OR HOSPITALIZED!</p>
+    </div>
+
+    <!-- Cheat Banner Notification -->
+    <div id="cheatNotification" class="fixed top-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300 opacity-0 transform -translate-y-4">
+        <div class="bg-black/90 border-2 border-yellow-500 text-yellow-400 font-hud text-2xl md:text-3xl px-6 py-2 rounded-lg shadow-[0_0_20px_rgba(248,193,23,0.6)] flex items-center gap-3">
+            <i class="fa-solid fa-code text-green-400"></i>
+            <span id="cheatText">CHEAT ACTIVATED</span>
+        </div>
+    </div>
+
+    <!-- HUD TOP RIGHT (Money, Health, Armor, Clock, Weapon) -->
+    <header class="fixed top-3 right-3 md:top-5 md:right-6 z-40 flex flex-col items-end pointer-events-none select-none">
+        <!-- Clock & Wanted Level -->
+        <div class="flex items-center gap-3 mb-1">
+            <!-- Wanted Stars -->
+            <div id="wantedStars" class="flex text-yellow-400 text-sm md:text-base gap-0.5">
+                <i class="fa-solid fa-star drop-shadow-[0_2px_2px_rgba(0,0,0,0.9)] opacity-30"></i>
+                <i class="fa-solid fa-star drop-shadow-[0_2px_2px_rgba(0,0,0,0.9)] opacity-30"></i>
+                <i class="fa-solid fa-star drop-shadow-[0_2px_2px_rgba(0,0,0,0.9)] opacity-30"></i>
+                <i class="fa-solid fa-star drop-shadow-[0_2px_2px_rgba(0,0,0,0.9)] opacity-30"></i>
+                <i class="fa-solid fa-star drop-shadow-[0_2px_2px_rgba(0,0,0,0.9)] opacity-30"></i>
+                <i class="fa-solid fa-star drop-shadow-[0_2px_2px_rgba(0,0,0,0.9)] opacity-30"></i>
+            </div>
+            <!-- Clock -->
+            <div id="hudClock" class="font-hud text-3xl md:text-4xl text-gray-200 tracking-widest drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                12:00
+            </div>
+        </div>
+
+        <!-- Weapon Icon Box & Ammo -->
+        <div class="flex items-center gap-3 my-1">
+            <div class="text-right">
+                <span class="font-hud text-xl text-yellow-400 block -mb-2">AK-47</span>
+                <span class="font-hud text-2xl md:text-3xl text-gray-100 tracking-wider drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">9999-99</span>
+            </div>
+            <div class="w-14 h-14 md:w-16 md:h-16 bg-black/70 border-2 border-gray-600 rounded flex items-center justify-center p-1 shadow-md">
+                <i class="fa-solid fa-gun text-2xl md:text-3xl text-yellow-400 transform -rotate-12"></i>
+            </div>
+        </div>
+
+        <!-- Bars Container -->
+        <div class="w-44 md:w-56 space-y-1.5 mt-1">
+            <!-- Armor Bar -->
+            <div class="w-full bg-black/80 p-0.5 rounded border border-gray-800">
+                <div class="flex justify-between items-center text-xs px-1 text-gray-300 font-hud">
+                    <span>ARMOR</span>
+                    <span id="armorVal">100%</span>
+                </div>
+                <div class="w-full bg-gray-900 h-3 md:h-4 rounded-sm overflow-hidden p-0.5">
+                    <div id="armorBar" class="h-full bg-gradient-to-r from-blue-700 to-blue-400 rounded-sm transition-all duration-500" style="width: 100%;"></div>
+                </div>
+            </div>
+
+            <!-- Health Bar -->
+            <div class="w-full bg-black/80 p-0.5 rounded border border-gray-800">
+                <div class="flex justify-between items-center text-xs px-1 text-gray-300 font-hud">
+                    <span>HEALTH</span>
+                    <span id="healthVal">100%</span>
+                </div>
+                <div class="w-full bg-gray-900 h-3 md:h-4 rounded-sm overflow-hidden p-0.5">
+                    <div id="healthBar" class="h-full bg-gradient-to-r from-red-700 to-red-500 rounded-sm transition-all duration-500" style="width: 100%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Money Counter -->
+        <div class="mt-2">
+            <div id="hudMoney" class="font-hud text-3xl md:text-5xl text-green-500 tracking-widest drop-shadow-[3px_3px_0px_rgba(0,0,0,1)]">
+                $099,999,999
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-6xl mx-auto px-4 pt-6 pb-24 relative z-10">
+
+        <!-- AUDIO CONTROL PANEL (Fixed Top Left) -->
+        <div class="fixed top-4 left-4 z-40 flex items-center gap-2">
+            <button id="toggleAudioBtn" onclick="toggleAudioEngine()" class="bg-black/80 hover:bg-green-900 border border-green-500 text-green-400 text-xs md:text-sm font-hud px-3 py-1.5 rounded flex items-center gap-2 transition shadow-lg pointer-events-auto">
+                <i class="fa-solid fa-volume-high text-green-400" id="audioIcon"></i>
+                <span id="audioStatus">SFX: ON</span>
+            </button>
+        </div>
+
+        <!-- HERO / MISSION PASSED BANNER SECTION -->
+        <section class="mt-12 md:mt-16 text-center mb-16">
+            <!-- Mission Passed Box -->
+            <div class="inline-block w-full max-w-3xl mb-6">
+                <div class="animate-mission bg-black/90 border-t-4 border-b-4 border-yellow-500 py-6 px-4 shadow-[0_0_30px_rgba(248,193,23,0.3)] relative overflow-hidden">
+                    <div class="absolute inset-0 bg-yellow-500/5 pointer-events-none"></div>
+                    <p class="font-pricedown text-2xl md:text-4xl text-yellow-400 tracking-wider mb-1 drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                        MISSION PASSED!
+                    </p>
+                    <p class="font-hud text-3xl md:text-5xl text-green-400 tracking-widest drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                        +RESPECT
+                    </p>
+                </div>
+            </div>
+
+            <!-- Profile Title & Avatar Header -->
+            <div class="flex flex-col md:flex-row items-center justify-center gap-6 mt-4">
+                <!-- Avatar Frame -->
+                <div class="relative group">
+                    <div class="w-32 h-32 md:w-44 md:h-44 rounded-full border-4 border-green-500 p-1 bg-black/80 shadow-[0_0_25px_rgba(0,255,65,0.4)] overflow-hidden transition-transform duration-300 group-hover:scale-105">
+                        <img src="https://github.com/archivers999/joyykesayangan-bocilkematian/blob/main/IMG_2070.jpg?raw=true" alt="King GTA SAMP Avatar" class="w-full h-full object-cover rounded-full filter contrast-125 saturate-125">
+                    </div>
+                    <span class="absolute bottom-1 right-1 bg-green-600 text-black font-bold text-xs px-2 py-0.5 rounded-full border border-black font-hud">
+                        LVL 17+
+                    </span>
+                </div>
+
+                <!-- Title & Tags -->
+                <div class="text-center md:text-left">
+                    <div class="inline-block bg-green-950/80 border border-green-500/50 text-green-400 text-xs px-3 py-1 rounded-full mb-2 font-hud tracking-widest">
+                        <i class="fa-solid fa-street-view mr-1"></i> CONTENT CREATOR / GAMING
+                    </div>
+                    <h1 class="font-pricedown text-5xl md:text-7xl text-white tracking-wide drop-shadow-[4px_4px_0px_rgba(18,94,36,0.9)]">
+                        AbayyGantengBioo!!!
+                    </h1>
+                    <p class="font-street text-xl md:text-2xl text-yellow-400 mt-1">
+                        "Welcome to our r bio."
+                    </p>
+                    <div class="flex flex-wrap justify-center md:justify-start gap-2 mt-4">
+                        <span class="bg-black/70 border border-gray-700 text-gray-300 px-3 py-1 rounded text-xs flex items-center gap-1.5">
+                            <i class="fa-solid fa-gamepad text-green-400"></i> Roleplay Enthusiast
+                        </span>
+                        <span class="bg-black/70 border border-gray-700 text-gray-300 px-3 py-1 rounded text-xs flex items-center gap-1.5">
+                            <i class="fa-solid fa-code text-blue-400"></i> CLEO / Lua Modder
+                        </span>
+                        <span class="bg-black/70 border border-gray-700 text-gray-300 px-3 py-1 rounded text-xs flex items-center gap-1.5">
+                            <i class="fa-solid fa-headset text-purple-400"></i> Content Creator
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MAIN GRID CONTENT -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- LEFT COLUMN: CHICAGO VECTOR RADAR & STATS -->
+            <div class="space-y-8">
+                
+                <!-- DETAILED CHICAGO RADAR MINIMAP WIDGET -->
+                <div class="gta-card p-4 rounded-xl relative overflow-hidden">
+                    <div class="flex items-center justify-between mb-2 border-b border-green-800/60 pb-2">
+                        <h2 class="font-hud text-2xl text-green-400 flex items-center gap-2">
+                            <i class="fa-solid fa-compass"></i> CHICAGO RADAR
+                        </h2>
+                        <span id="currentDistrictLabel" class="text-xs font-hud text-yellow-400 bg-yellow-950/80 px-2 py-0.5 rounded border border-yellow-800">
+                            THE LOOP (DOWNTOWN)
+                        </span>
+                    </div>
+
+                    <!-- Interactive Vector Radar Screen -->
+                    <div id="radarContainer" class="radar-screen w-full h-64 md:h-72 rounded-lg relative flex items-center justify-center">
+                        <div class="radar-sweep"></div>
+                        
+                        <!-- Canvas for Vector Chicago Map -->
+                        <canvas id="chicagoMapCanvas" class="absolute inset-0 w-full h-full z-0"></canvas>
+
+                        <!-- HUD Center Target Overlay -->
+                        <div class="absolute z-20 pointer-events-none text-yellow-400 text-xl transform drop-shadow-[0_2px_4px_rgba(0,0,0,1)]">
+                            <i class="fa-solid fa-location-arrow text-yellow-400 text-2xl transform -rotate-45"></i>
+                        </div>
+
+                        <!-- Zoom & Pan Quick Controls -->
+                        <div class="absolute bottom-2 right-2 z-30 flex flex-col gap-1">
+                            <button onclick="zoomMap(1.2)" class="bg-black/80 hover:bg-green-900 border border-green-500 text-green-400 w-7 h-7 rounded flex items-center justify-center text-xs font-bold active:scale-95 transition" title="Zoom In">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                            <button onclick="zoomMap(0.8)" class="bg-black/80 hover:bg-green-900 border border-green-500 text-green-400 w-7 h-7 rounded flex items-center justify-center text-xs font-bold active:scale-95 transition" title="Zoom Out">
+                                <i class="fa-solid fa-minus"></i>
+                            </button>
+                            <button onclick="resetMap()" class="bg-black/80 hover:bg-yellow-900 border border-yellow-500 text-yellow-400 w-7 h-7 rounded flex items-center justify-center text-xs font-bold active:scale-95 transition" title="Reset View">
+                                <i class="fa-solid fa-crosshairs"></i>
+                            </button>
+                        </div>
+
+                        <!-- Touch/Drag Indicator -->
+                        <div class="absolute top-2 left-2 z-30 bg-black/70 text-gray-300 text-[10px] font-hud px-2 py-0.5 rounded pointer-events-none border border-gray-700">
+                            <i class="fa-solid fa-hand-pointer mr-1 text-green-400"></i> DRAG / SCROLL TO NAVIGATE
+                        </div>
+                    </div>
+
+                    <!-- Chicago District Viewport Switcher -->
+                    <div class="mt-3">
+                        <span class="text-[11px] font-hud text-gray-400 block mb-1">SELECT DISTRICT VIEWPORT:</span>
+                        <div class="grid grid-cols-2 gap-1.5 font-hud text-xs">
+                            <button onclick="setDistrict('loop')" class="bg-black/60 hover:bg-green-900/80 border border-green-700 text-gray-200 py-1 px-2 rounded text-left truncate transition flex items-center justify-between">
+                                <span>The Loop</span>
+                                <i class="fa-solid fa-building text-[10px] text-green-400"></i>
+                            </button>
+                            <button onclick="setDistrict('west')" class="bg-black/60 hover:bg-green-900/80 border border-green-700 text-gray-200 py-1 px-2 rounded text-left truncate transition flex items-center justify-between">
+                                <span>West Side</span>
+                                <i class="fa-solid fa-road text-[10px] text-yellow-400"></i>
+                            </button>
+                            <button onclick="setDistrict('south')" class="bg-black/60 hover:bg-green-900/80 border border-green-700 text-gray-200 py-1 px-2 rounded text-left truncate transition flex items-center justify-between">
+                                <span>South Side</span>
+                                <i class="fa-solid fa-water text-[10px] text-blue-400"></i>
+                            </button>
+                            <button onclick="setDistrict('ohare')" class="bg-black/60 hover:bg-green-900/80 border border-green-700 text-gray-200 py-1 px-2 rounded text-left truncate transition flex items-center justify-between">
+                                <span>O'Hare / North</span>
+                                <i class="fa-solid fa-plane text-[10px] text-purple-400"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 text-xs text-gray-400 flex justify-between font-hud border-t border-green-900/40 pt-2">
+                        <span><i class="fa-solid fa-location-dot text-red-500 mr-1"></i> Chicago, IL, USA</span>
+                        <span class="text-green-400">41.8781° N, 87.6298° W</span>
+                    </div>
+                </div>
+
+                <!-- CHARACTER STATS BOX -->
+                <div class="gta-card p-5 rounded-xl">
+                    <h2 class="font-hud text-2xl text-green-400 mb-4 border-b border-green-800/60 pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-simple"></i> STATS AbayyGG
+                
+                    </h2>
+
+                    <div class="space-y-4">
+                        <!-- Stat Item -->
+                        <div>
+                            <div class="flex justify-between text-xs font-hud text-gray-300 mb-1">
+                                <span>ROLEPLAY SKILL</span>
+                                <span class="text-green-400">MASTER (98%)</span>
+                            </div>
+                            <div class="w-full bg-black/60 h-2.5 rounded overflow-hidden border border-gray-800">
+                                <div class="bg-green-500 h-full rounded" style="width: 98%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Stat Item -->
+                        <div>
+                            <div class="flex justify-between text-xs font-hud text-gray-300 mb-1">
+                                <span>GOMBAL SKILL</span>
+                                <span class="text-green-400">EXPERT (88%)</span>
+                            </div>
+                            <div class="w-full bg-black/60 h-2.5 rounded overflow-hidden border border-gray-800">
+                                <div class="bg-green-500 h-full rounded" style="width: 88%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Stat Item -->
+                        <div>
+                            <div class="flex justify-between text-xs font-hud text-gray-300 mb-1">
+                                <span>STAMINA / FITNESS</span>
+                                <span class="text-green-400">MAXED OUT (70%)</span>
+                            </div>
+                            <div class="w-full bg-black/60 h-2.5 rounded overflow-hidden border border-gray-800">
+                                <div class="bg-green-500 h-full rounded" style="width: 70%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Stat Item -->
+                        <div>
+                            <div class="flex justify-between text-xs font-hud text-gray-300 mb-1">
+                                <span>COOKING SKILL</span>
+                                <span class="text-green-400">HITMAN (80%)</span>
+                            </div>
+                            <div class="w-full bg-black/60 h-2.5 rounded overflow-hidden border border-gray-800">
+                                <div class="bg-green-500 h-full rounded" style="width: 95%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Stat Item -->
+                        <div>
+                            <div class="flex justify-between text-xs font-hud text-gray-300 mb-1">
+                                <span>RESPECT LIVING THIKS</span>
+                                <span class="text-yellow-400">LEGENDARY (100%)</span>
+                            </div>
+                            <div class="w-full bg-black/60 h-2.5 rounded overflow-hidden border border-gray-800">
+                                <div class="bg-yellow-500 h-full rounded" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RADIO PLAYER WIDGET -->
+                <div class="gta-card-gold p-5 rounded-xl">
+                    <h2 class="font-hud text-2xl text-yellow-400 mb-3 flex items-center justify-between border-b border-yellow-800/60 pb-2">
+                        <span><i class="fa-solid fa-radio mr-2"></i>SAN ANDREAS RADIO</span>
+                        <span id="radioFreq" class="text-xs bg-yellow-950 text-yellow-300 px-2 py-0.5 rounded">102.5 FM</span>
+                    </h2>
+
+                    <div class="text-center my-3">
+                        <div id="radioStationTitle" class="font-pricedown text-2xl text-white tracking-wide">
+                            RADIO LOS SANTOS
+                        </div>
+                        <p id="radioGenre" class="text-xs font-hud text-yellow-300">West Coast Hip-Hop / Gangsta Rap</p>
+                    </div>
+
+                    <!-- Audio Controls Synthesized -->
+                    <div class="flex items-center justify-center gap-3 mt-4">
+                        <button onclick="prevRadioStation()" class="bg-black/60 hover:bg-yellow-900 border border-yellow-600 text-yellow-400 w-10 h-10 rounded-full flex items-center justify-center active:scale-95 transition">
+                            <i class="fa-solid fa-backward-step"></i>
+                        </button>
+                        <button id="radioPlayBtn" onclick="toggleRadioPlay()" class="bg-yellow-500 hover:bg-yellow-400 text-black font-bold w-12 h-12 rounded-full flex items-center justify-center active:scale-95 transition shadow-lg">
+                            <i class="fa-solid fa-play text-xl" id="radioPlayIcon"></i>
+                        </button>
+                        <button onclick="nextRadioStation()" class="bg-black/60 hover:bg-yellow-900 border border-yellow-600 text-yellow-400 w-10 h-10 rounded-full flex items-center justify-center active:scale-95 transition">
+                            <i class="fa-solid fa-forward-step"></i>
+                        </button>
+                    </div>
+
+                    <p class="text-center text-[11px] text-gray-400 mt-3 font-hud">
+                        <i class="fa-solid fa-music mr-1"></i> Interactive Synth Groove Radio Engine
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- CENTER & RIGHT COLUMN: BIOGRAPHY, SKILLS & INTERACTIVES -->
+            <div class="lg:col-span-2 space-y-8">
+
+                <!-- ABOUT ME / BIOGRAPHY -->
+                <div class="gta-card p-6 rounded-xl relative">
+                    <div class="absolute top-4 right-4 text-green-500/20 text-6xl pointer-events-none">
+                        <i class="fa-solid fa-street-view"></i>
+                    </div>
+
+                    <h2 class="font-hud text-3xl text-green-400 mb-4 border-b border-green-800/60 pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-user-ninja"></i> TENTANG AKU / ABOUT ME
+                    </h2>
+
+                    <div class="space-y-4 text-gray-300 text-sm md:text-base leading-relaxed">
+                        <p class="first-letter:text-4xl first-letter:font-pricedown first-letter:text-green-400 first-letter:mr-2 first-letter:float-left">
+                            Halo bro! Gue <strong class="text-white">King GTA SAMP</strong>, seorang gamer, scripter, dan content creator, Abayy main samp dari 5 Tahun yang lalu lohh!!!
+                        </p>
+                        <p>
+                            Berawal dari hobi keliling SA pakai NRG-500 dan rasa penasaraan yang tinggi, sekarang gue fokus bikin script modding (CLEO/Lua/MonetLoader), livestreaming, dan ngebangun komunitas gaming street-vibe yang solid.
+                        </p>
+                    </div>
+
+                    <!-- Quick Details Grid -->
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-6 pt-4 border-t border-green-900/40">
+                        <div class="bg-black/50 p-2.5 rounded border border-green-900/50">
+                            <span class="text-xs text-gray-400 font-hud block">NICKNAME / TAG</span>
+                            <span class="font-bold text-green-400">Anthonio/Crimson </span>
+                        </div>
+                        <div class="bg-black/50 p-2.5 rounded border border-green-900/50">
+                            <span class="text-xs text-gray-400 font-hud block">CURRENT LOCATION</span>
+                            <span class="font-bold text-yellow-400">Riau, Pekanbaru (The Loop)</span>
+                        </div>
+                        <div class="bg-black/50 p-2.5 rounded border border-green-900/50">
+                            <span class="text-xs text-gray-400 font-hud block">PREFERRED VEHICLE</span>
+                            <span class="font-bold text-gray-200">Vario badai / Fortuner</span>
+                        </div>
+                        <div class="bg-black/50 p-2.5 rounded border border-green-900/50">
+                            <span class="text-xs text-gray-400 font-hud block">MAIN WEAPON</span>
+                            <span class="font-bold text-red-400">Desert Eagle & AK-47</span>
+                        </div>
+                        <div class="bg-black/50 p-2.5 rounded border border-green-900/50">
+                            <span class="text-xs text-gray-400 font-hud block">ROLEPLAY STYLE</span>
+                            <span class="font-bold text-blue-400">Heavy RP / Hardcore</span>
+                        </div>
+                        <div class="bg-black/50 p-2.5 rounded border border-green-900/50">
+                            <span class="text-xs text-gray-400 font-hud block">STATUS</span>
+                            <span class="font-bold text-green-400 animate-pulse">ONLINE IN-GAME</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HOBBIES & INTERESTS (STREET VIBE) -->
+                <div class="gta-card p-6 rounded-xl">
+                    <h2 class="font-hud text-3xl text-green-400 mb-4 border-b border-green-800/60 pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-icons"></i> HOBBIES & STREET LIFE
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Card 1 -->
+                        <div class="bg-black/60 p-4 rounded-lg border border-green-900 hover:border-green-500 transition duration-300 flex items-start gap-3">
+                            <div class="p-3 bg-green-950 text-green-400 rounded-lg text-2xl">
+                                <i class="fa-solid fa-basketball"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-white text-base">Street Basketball</h3>
+                                <p class="text-xs text-gray-400 mt-1">DIA SENYUKAI BASKETBALL DAN PECINTA LABRON JAMES
+                                    .</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div class="bg-black/60 p-4 rounded-lg border border-green-900 hover:border-green-500 transition duration-300 flex items-start gap-3">
+                            <div class="p-3 bg-green-950 text-green-400 rounded-lg text-2xl">
+                                <i class="fa-solid fa-dumbbell"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-white text-base">Gym & Fitness</h3>
+                                <p class="text-xs text-gray-400 mt-1">Nge-gym rutin ala street gym. Menjaga fisik tetap prima untuk stamina maxed out!</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div class="bg-black/60 p-4 rounded-lg border border-green-900 hover:border-green-500 transition duration-300 flex items-start gap-3">
+                            <div class="p-3 bg-green-950 text-green-400 rounded-lg text-2xl">
+                                <i class="fa-solid fa-record-vinyl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-white text-base">Hip-Hop & Drill Music</h3>
+                                <p class="text-xs text-gray-400 mt-1">Penikmat musik rap Chicago Drill, West Coast 90s, boom bap, dan trap beats.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 4 -->
+                        <div class="bg-black/60 p-4 rounded-lg border border-green-900 hover:border-green-500 transition duration-300 flex items-start gap-3">
+                            <div class="p-3 bg-green-950 text-green-400 rounded-lg text-2xl">
+                                <i class="fa-solid fa-laptop-code"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-white text-base">SAMP Modding</h3>
+                                <p class="text-xs text-gray-400 mt-1">Eksperimen script CLEO, Lua, MonetLoader, dan custom HUD UI untuk GTA SAMP Android & PC.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SKILLS & KEAHLIAN TECHNICAL -->
+                <div class="gta-card p-6 rounded-xl">
+                    <h2 class="font-hud text-3xl text-green-400 mb-4 border-b border-green-800/60 pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-screwdriver-wrench"></i> SKILLS & ACHIEVEMENTS
+                    </h2>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-black/40 p-3.5 rounded border border-gray-800 hover:border-green-600 transition">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fa-solid fa-code text-yellow-400"></i>
+                                <h4 class="font-bold text-sm text-gray-200">SAMP Scripting & Modding</h4>
+                            </div>
+                            <p class="text-xs text-gray-400">Pawn, CLEO, Lua, MonetLoader, Custom Interface, APK Modding.</p>
+                        </div>
+
+                        <div class="bg-black/40 p-3.5 rounded border border-gray-800 hover:border-green-600 transition">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fa-solid fa-headset text-purple-400"></i>
+                                <h4 class="font-bold text-sm text-gray-200">Live Streaming & Content</h4>
+                            </div>
+                            <p class="text-xs text-gray-400">OBS Studio, QuickSync, Video Editing, Community Engagement, Discord Management.</p>
+                        </div>
+
+                        <div class="bg-black/40 p-3.5 rounded border border-gray-800 hover:border-green-600 transition">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fa-solid fa-laptop text-blue-400"></i>
+                                <h4 class="font-bold text-sm text-gray-200">Web Development</h4>
+                            </div>
+                            <p class="text-xs text-gray-400">HTML5, CSS3, Tailwind CSS, JavaScript, Canvas 2D Vector Graphics, Web Audio API.</p>
+                        </div>
+
+                        <div class="bg-black/40 p-3.5 rounded border border-gray-800 hover:border-green-600 transition">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fa-solid fa-server text-green-400"></i>
+                                <h4 class="font-bold text-sm text-gray-200">Server Management</h4>
+                            </div>
+                            <p class="text-xs text-gray-400">SAMP Server Configuration, MySQL Database, Anti-Cheat Integrations.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHEAT CODES INTERACTIVE TRIGGER PANEL -->
+                <div class="gta-card p-6 rounded-xl border-yellow-600/50">
+                    <div class="flex items-center justify-between mb-3 border-b border-yellow-800/60 pb-2">
+                        <h2 class="font-hud text-3xl text-yellow-400 flex items-center gap-2">
+                            <i class="fa-solid fa-terminal"></i> CHEAT CODE CONSOLE
+                        </h2>
+                        <span class="text-xs font-hud text-gray-400">TYPE ON KEYBOARD OR CLICK</span>
+                    </div>
+
+                    <p class="text-xs text-gray-300 mb-4">
+                        Ketik kode cheat langsung di keyboard komputer kamu kapan saja, atau klik tombol cheat instan di bawah untuk mengeksekusi script!
+                    </p>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <button onclick="triggerCheat('HESOYAM')" class="bg-black/80 hover:bg-green-950 border border-green-500 text-green-400 font-hud px-3 py-2.5 rounded text-sm flex flex-col items-center justify-center gap-1 active:scale-95 transition shadow">
+                            <span class="font-bold tracking-widest text-base">HESOYAM</span>
+                            <span class="text-[10px] text-gray-400">Full Health + Armor + $250k</span>
+                        </button>
+
+                        <button onclick="triggerCheat('BAGUVIX')" class="bg-black/80 hover:bg-blue-950 border border-blue-500 text-blue-400 font-hud px-3 py-2.5 rounded text-sm flex flex-col items-center justify-center gap-1 active:scale-95 transition shadow">
+                            <span class="font-bold tracking-widest text-base">BAGUVIX</span>
+                            <span class="text-[10px] text-gray-400">God Mode Armor</span>
+                        </button>
+
+                        <button onclick="triggerCheat('AEZAKMI')" class="bg-black/80 hover:bg-yellow-950 border border-yellow-500 text-yellow-400 font-hud px-3 py-2.5 rounded text-sm flex flex-col items-center justify-center gap-1 active:scale-95 transition shadow">
+                            <span class="font-bold tracking-widest text-base">AEZAKMI</span>
+                            <span class="text-[10px] text-gray-400">Clear Wanted Level</span>
+                        </button>
+
+                        <button onclick="triggerCheat('RESPECT')" class="bg-black/80 hover:bg-purple-950 border border-purple-500 text-purple-400 font-hud px-3 py-2.5 rounded text-sm flex flex-col items-center justify-center gap-1 active:scale-95 transition shadow">
+                            <span class="font-bold tracking-widest text-base">RESPECT</span>
+                            <span class="text-[10px] text-gray-400">Mission Passed Sound</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- CONTACT & SOCIAL LINKS -->
+                <div class="gta-card p-6 rounded-xl">
+                    <h2 class="font-hud text-3xl text-green-400 mb-4 border-b border-green-800/60 pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-address-book"></i> CONNECT / SOCIAL FREQUENCIES
+                    </h2>
+
+                    <p class="text-sm text-gray-300 mb-6">
+                        Mau ngobrolin modding SAMP, ajak mabar server Roleplay, atau kolaborasi livestream? Panggil gue melalui channel berikut:
+                    </p>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <!-- YouTube -->
+                        <a href="https://youtu.be/u0fgRj23ZXE" target="_blank" onclick="playClickSound()" class="bg-black/70 border border-red-800 hover:border-red-500 p-4 rounded-lg flex flex-col items-center justify-center gap-2 group transition">
+                            <i class="fa-brands fa-youtube text-3xl text-red-500 group-hover:scale-110 transition"></i>
+                            <span class="font-hud text-sm text-gray-200">YOUTUBE</span>
+                            <span class="text-[10px] text-gray-400 font-hud">@PANGERANSAMP</span>
+                        </a>
+
+                        <!-- Discord -->
+                        <a href="https://discord.gg/sRKAb7GYV" target="_blank" onclick="playClickSound()" class="bg-black/70 border border-indigo-800 hover:border-indigo-500 p-4 rounded-lg flex flex-col items-center justify-center gap-2 group transition">
+                            <i class="fa-brands fa-discord text-3xl text-indigo-400 group-hover:scale-110 transition"></i>
+                            <span class="font-hud text-sm text-gray-200">DISCORD</span>
+                            <span class="text-[10px] text-gray-400 font-hud">COMUNITY</span>
+                        </a>
+
+                        <!-- Instagram -->
+                        <a href="https://www.instagram.com/abayyhiroo?exln=dnRsaXJ2OG0wMnVw" target="_blank" onclick="playClickSound()" class="bg-black/70 border border-pink-800 hover:border-pink-500 p-4 rounded-lg flex flex-col items-center justify-center gap-2 group transition">
+                            <i class="fa-brands fa-instagram text-3xl text-pink-500 group-hover:scale-110 transition"></i>
+                            <span class="font-hud text-sm text-gray-200">INSTAGRAM</span>
+                            <span class="text-[10px] text-gray-400 font-hud">@abayyhiroo</span>
+                        </a>
+
+                        <!-- TikTok -->
+                        <a href="https://www.tiktok.com/@abayyyesz?_r=1&_t=ZS-9Ad5wgj0Dor" target="_blank" onclick="playClickSound()" class="bg-black/70 border border-cyan-800 hover:border-cyan-500 p-4 rounded-lg flex flex-col items-center justify-center gap-2 group transition">
+                            <i class="fa-brands fa-tiktok text-3xl text-cyan-400 group-hover:scale-110 transition"></i>
+                            <span class="font-hud text-sm text-gray-200">TIKTOK</span>
+                            <span class="text-[10px] text-gray-400 font-hud">@P4NGERAN5</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-black/90 border-t border-green-900 py-6 text-center relative z-20 text-xs text-gray-500 font-hud">
+        <div class="max-w-6xl mx-auto px-4 space-y-2">
+            <p class="text-gray-400 text-sm">
+                &copy; <span id="year">2026</span> <span class="text-green-400 font-bold">KING GTA SAMP</span>. ALL RIGHTS RESERVED.
+            </p>
+            <p class="text-gray-600">
+                GTA San Andreas & SAMP Inspired Fan Web Design. Chicago Vector Radar Map. Built for the Roleplay Community.
+            </p>
+        </div>
+    </footer>
+
+
+    <!-- JAVASCRIPT LOGIC, VECTOR CHICAGO MAP & AUDIO SYNTHESIZER -->
+    <script>
+        // Set dynamic year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Game Stats State
+        let playerStats = {
+            health: 100,
+            armor: 100,
+            money: 99999999,
+            wanted: 0
+        };
+
+        // Web Audio API Synthesizer (No external audio files required)
+        let audioCtx = null;
+        let soundEnabled = true;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function toggleAudioEngine() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('audioIcon');
+            const status = document.getElementById('audioStatus');
+            if (soundEnabled) {
+                icon.className = "fa-solid fa-volume-high text-green-400";
+                status.textContent = "SFX: ON";
+                playClickSound();
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-red-500";
+                status.textContent = "SFX: OFF";
+            }
+        }
+
+        // GTA SA Click Sound Synthesizer
+        function playClickSound() {
+            if (!soundEnabled) return;
+            try {
+                initAudio();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.08);
+                
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.08);
+            } catch(e){}
+        }
+
+        // Cheat Activated Sound Synthesizer
+        function playCheatSound() {
+            if (!soundEnabled) return;
+            try {
+                initAudio();
+                const now = audioCtx.currentTime;
+                
+                // Play 4 rapid ascending arpeggio notes
+                const freqs = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                freqs.forEach((f, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(f, now + (idx * 0.06));
+
+                    gain.gain.setValueAtTime(0.12, now + (idx * 0.06));
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + (idx * 0.06) + 0.15);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+
+                    osc.start(now + (idx * 0.06));
+                    osc.stop(now + (idx * 0.06) + 0.15);
+                });
+            } catch(e){}
+        }
+
+        // Mission Passed Respect Sound Synthesizer
+        function playRespectSound() {
+            if (!soundEnabled) return;
+            try {
+                initAudio();
+                const now = audioCtx.currentTime;
+                // Grand Brass Chime Sequence
+                const notes = [392.00, 523.25, 659.25, 783.99]; // G4, C5, E5, G5
+                notes.forEach((f, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(f, now + (i * 0.12));
+
+                    gain.gain.setValueAtTime(0.2, now + (i * 0.12));
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + (i * 0.12) + 0.4);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+
+                    osc.start(now + (i * 0.12));
+                    osc.stop(now + (i * 0.12) + 0.4);
+                });
+            } catch(e){}
+        }
+
+        // Live Clock Updater
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('hudClock').textContent = `${hours}:${minutes}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Format Money with Leading Zeros
+        function formatMoney(amount) {
+            let str = amount.toString();
+            while (str.length < 8) {
+                str = '0' + str;
+            }
+            return '$' + str.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Trigger Cheat Logic
+        function triggerCheat(code) {
+            const notif = document.getElementById('cheatNotification');
+            const text = document.getElementById('cheatText');
+            
+            playCheatSound();
+
+            if (code === 'HESOYAM') {
+                playerStats.health = 100;
+                playerStats.armor = 100;
+                playerStats.money += 250000;
+                
+                text.textContent = "CHEAT ACTIVATED: HESOYAM (HEALTH + ARMOR + $250K)";
+                
+                // Flash Screen Green
+                document.body.classList.add('hesoyam-flash');
+                setTimeout(() => document.body.classList.remove('hesoyam-flash'), 500);
+
+            } else if (code === 'BAGUVIX') {
+                playerStats.armor = 100;
+                text.textContent = "CHEAT ACTIVATED: BAGUVIX (INFINITE ARMOR)";
+            } else if (code === 'AEZAKMI') {
+                playerStats.wanted = 0;
+                text.textContent = "CHEAT ACTIVATED: AEZAKMI (NEVER WANTED)";
+                updateWantedStars(0);
+            } else if (code === 'RESPECT') {
+                playRespectSound();
+                text.textContent = "MISSION PASSED! +RESPECT";
+            }
+
+            // Update HUD elements
+            document.getElementById('healthBar').style.width = playerStats.health + '%';
+            document.getElementById('healthVal').textContent = playerStats.health + '%';
+            document.getElementById('armorBar').style.width = playerStats.armor + '%';
+            document.getElementById('armorVal').textContent = playerStats.armor + '%';
+            document.getElementById('hudMoney').textContent = formatMoney(playerStats.money);
+
+            // Show Banner Notification
+            notif.classList.remove('opacity-0', '-translate-y-4');
+            notif.classList.add('opacity-100', 'translate-y-0');
+
+            setTimeout(() => {
+                notif.classList.remove('opacity-100', 'translate-y-0');
+                notif.classList.add('opacity-0', '-translate-y-4');
+            }, 3000);
+        }
+
+        function updateWantedStars(level) {
+            const starsContainer = document.getElementById('wantedStars');
+            const stars = starsContainer.querySelectorAll('i');
+            stars.forEach((star, index) => {
+                if (index < level) {
+                    star.classList.remove('opacity-30');
+                    star.classList.add('text-yellow-400', 'animate-pulse');
+                } else {
+                    star.classList.add('opacity-30');
+                    star.classList.remove('animate-pulse');
+                }
+            });
+        }
+
+        // Keyboard Cheat Code Detector
+        let keySequence = '';
+        document.addEventListener('keydown', (e) => {
+            initAudio();
+            keySequence += e.key.toUpperCase();
+            if (keySequence.length > 10) {
+                keySequence = keySequence.substring(keySequence.length - 10);
+            }
+
+            if (keySequence.includes('HESOYAM')) {
+                triggerCheat('HESOYAM');
+                keySequence = '';
+            } else if (keySequence.includes('BAGUVIX')) {
+                triggerCheat('BAGUVIX');
+                keySequence = '';
+            } else if (keySequence.includes('AEZAKMI')) {
+                triggerCheat('AEZAKMI');
+                keySequence = '';
+            }
+        });
+
+        // RADIO STATIONS ENGINE (SYNTHESIZED LO-FI GROOVE)
+       const radioStations = [
+  { 
+    name: "RADIO LOS SANTOS", 
+    freq: "102.5 FM", 
+    genre: "West Coast Gangsta Rap", 
+    url: "https://github.com/archivers999/joyykesayangan-bocilkematian/blob/main/GTA%20Sa%20Radio%20Los%20Santos%20Soundtrack%2016.%20Dr.%20Dre%20feat%20Snoop%20Dogg%20Nuthin'%20But%20a%20G%20Thang.mp3" // <--- MASUKKAN NAMA FILE MP3 ATAU LINK DI SINI!
+  },
+  { 
+    name: "CHICAGO DRILL 108.8", 
+    freq: "108.8 FM", 
+    genre: "Chicago Drill & Street Beats", 
+    url: "https://stream.zeno.fm/f3wvbbqmdg8uv" 
+  },
+  { 
+    name: "K-DST", 
+    freq: "97.1 FM", 
+    genre: "Classic Dust Rock", 
+    url: "https://stream.zeno.fm/4vbf3a20y88uv" 
+  },
+  { 
+    name: "BOUNCE FM", 
+    freq: "105.9 FM", 
+    genre: "Funk & Disco Beats", 
+    url: "https://stream.zeno.fm/0333230188uv" 
+  }
+];
+
+        // =============================================================
+        // DETAILED VECTOR CHICAGO MAP & RADAR INTERACTION ENGINE
+        // =============================================================
+        const canvas = document.getElementById('chicagoMapCanvas');
+        const ctx = canvas.getContext('2d');
+        const radarContainer = document.getElementById('radarContainer');
+
+        // Map View State
+        let mapScale = 1.2;
+        let mapOffset = { x: -30, y: -20 };
+        let isDragging = false;
+        let dragStart = { x: 0, y: 0 };
+
+        // District Viewport Presets
+        const districts = {
+            loop: { x: -30, y: -20, scale: 1.3, label: "THE LOOP (DOWNTOWN)" },
+            west: { x: 180, y: -30, scale: 1.1, label: "WEST SIDE (NEAR WEST)" },
+            south: { x: -30, y: -220, scale: 1.1, label: "SOUTH SIDE (CHINATOWN)" },
+            ohare: { x: 260, y: 220, scale: 0.85, label: "O'HARE / NORTH SIDE" }
+        };
+
+        function resizeCanvas() {
+            canvas.width = radarContainer.clientWidth;
+            canvas.height = radarContainer.clientHeight;
+            drawChicagoMap();
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        function setDistrict(key) {
+            playClickSound();
+            if (districts[key]) {
+                mapOffset.x = districts[key].x;
+                mapOffset.y = districts[key].y;
+                mapScale = districts[key].scale;
+                document.getElementById('currentDistrictLabel').textContent = districts[key].label;
+                drawChicagoMap();
+            }
+        }
+
+        function zoomMap(factor) {
+            playClickSound();
+            mapScale = Math.min(Math.max(mapScale * factor, 0.5), 3.5);
+            drawChicagoMap();
+        }
+
+        function resetMap() {
+            playClickSound();
+            setDistrict('loop');
+        }
+
+        // Panning Event Listeners
+        radarContainer.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            dragStart = { x: e.clientX - mapOffset.x, y: e.clientY - mapOffset.y };
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                mapOffset.x = e.clientX - dragStart.x;
+                mapOffset.y = e.clientY - dragStart.y;
+                drawChicagoMap();
+            }
+        });
+
+        window.addEventListener('mouseup', () => { isDragging = false; });
+
+        // Touch Dragging Support
+        radarContainer.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                isDragging = true;
+                dragStart = { x: e.touches[0].clientX - mapOffset.x, y: e.touches[0].clientY - mapOffset.y };
+            }
+        });
+
+        radarContainer.addEventListener('touchmove', (e) => {
+            if (isDragging && e.touches.length === 1) {
+                mapOffset.x = e.touches[0].clientX - dragStart.x;
+                mapOffset.y = e.touches[0].clientY - dragStart.y;
+                drawChicagoMap();
+            }
+        });
+
+        radarContainer.addEventListener('touchend', () => { isDragging = false; });
+
+        // Scroll Zoom
+        radarContainer.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            if (e.deltaY < 0) zoomMap(1.1);
+            else zoomMap(0.9);
+        });
+
+        // DRAW VECTOR MAP OF CHICAGO WITH GTA SA MINIMAP STYLING
+        function drawChicagoMap() {
+            if (!ctx) return;
+            const width = canvas.width;
+            canvasHeight = canvas.height;
+
+            // Clear Background with Navy SA Ocean Color
+            ctx.fillStyle = '#061724';
+            ctx.fillRect(0, 0, width, canvasHeight);
+
+            ctx.save();
+            // Apply Centered Pan & Zoom Transformation
+            ctx.translate(width / 2 + mapOffset.x, canvasHeight / 2 + mapOffset.y);
+            ctx.scale(mapScale, mapScale);
+
+            // 1. DRAW CHICAGO LANDMASS (SA Dark Teal/Navy Land Color)
+            ctx.fillStyle = '#0f2f28';
+            ctx.strokeStyle = '#1e4d3f';
+            ctx.lineWidth = 3;
+
+            // Main Land Polygon (Lake Shore Coastline on the East)
+            ctx.beginPath();
+            ctx.moveTo(-500, -500);
+            ctx.lineTo(120, -500); // North Coastline
+            ctx.lineTo(110, -250); // Lincoln Park shore
+            ctx.lineTo(100, -100); // Gold Coast
+            ctx.lineTo(130, -30);  // Navy Pier projection
+            ctx.lineTo(85, -10);   // Monroe Harbor inner bay
+            ctx.lineTo(95, 120);   // Grant Park / Museum Campus
+            ctx.lineTo(70, 250);   // Burnham Harbor
+            ctx.lineTo(110, 500);  // South Side Coastline
+            ctx.lineTo(-500, 500); // Inland West
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            // 2. PARKS & GREEN SPACES (Grant Park, Millennium Park, Lincoln Park)
+            ctx.fillStyle = '#174a2b'; // GTA SA Park Green
+            
+            // Grant & Millennium Park
+            ctx.fillRect(20, -40, 65, 150);
+            // Lincoln Park (North)
+            ctx.fillRect(50, -350, 50, 200);
+            // Humboldt Park (West)
+            ctx.fillRect(-220, -180, 50, 50);
+            // Garfield Park (West)
+            ctx.fillRect(-220, -30, 45, 45);
+            // Jackson Park (South)
+            ctx.fillRect(10, 300, 50, 70);
+
+            // 3. LAKE MICHIGAN WATER (GTA SA Water Tint)
+            // Water accent lines in Monroe Harbor & Navy Pier
+            ctx.fillStyle = '#061724';
+            // Navy Pier Peninsular Gap
+            ctx.beginPath();
+            ctx.rect(130, -40, 90, 20); // Navy Pier
+            ctx.fillStyle = '#1b3b2b';
+            ctx.fill();
+            ctx.strokeStyle = '#2bb673';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // 4. CHICAGO RIVER (Main Branch, North Branch, South Branch, Sanitary Canal)
+            ctx.strokeStyle = '#061724';
+            ctx.lineWidth = 14;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            ctx.beginPath();
+            // Main River from Lake Michigan entering West
+            ctx.moveTo(100, -50);
+            ctx.lineTo(-20, -50); // Wolf Point Junction
+            // North Branch going Northwest
+            ctx.lineTo(-120, -300);
+            // South Branch going South & Southwest
+            ctx.moveTo(-20, -50);
+            ctx.lineTo(-30, 80);
+            ctx.lineTo(-120, 180); // Sanitary & Ship Canal towards Cicero
+            ctx.lineTo(-350, 320);
+            ctx.stroke();
+
+            // Inner Cyan Water Glow Line for GTA SA River look
+            ctx.strokeStyle = '#0e4158';
+            ctx.lineWidth = 8;
+            ctx.stroke();
+
+            // 5. HIGHWAYS / EXPRESSWAYS (Gold / Orange GTA SA Style)
+            ctx.strokeStyle = '#dfa218'; // GTA Highway Gold
+            ctx.lineWidth = 5;
+
+            // I-90/I-94 Kennedy/Dan Ryan Expressway (North-South Main Arterial)
+            ctx.beginPath();
+            ctx.moveTo(-250, -500);
+            ctx.lineTo(-80, -200);
+            ctx.lineTo(-50, -60); // West of Loop
+            ctx.lineTo(-50, 120);
+            ctx.lineTo(-20, 300);
+            ctx.lineTo(0, 500);
+            ctx.stroke();
+
+            // I-290 Eisenhower Expressway (East-West into The Loop)
+            ctx.beginPath();
+            ctx.moveTo(-500, 10);
+            ctx.lineTo(-50, 10);
+            ctx.stroke();
+
+            // I-55 Stevenson Expressway (Southwest)
+            ctx.beginPath();
+            ctx.moveTo(-500, 280);
+            ctx.lineTo(-40, 150);
+            ctx.stroke();
+
+            // DuSable Lake Shore Drive (Coastline Highway)
+            ctx.strokeStyle = '#e0be38';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(90, -480);
+            ctx.lineTo(75, -250);
+            ctx.lineTo(85, -60);
+            ctx.lineTo(70, 130);
+            ctx.lineTo(50, 480);
+            ctx.stroke();
+
+            // 6. CHICAGO GRID STREET SYSTEM (White Roads GTA SA Style)
+            ctx.strokeStyle = 'rgba(240, 240, 240, 0.65)';
+            ctx.lineWidth = 1.8;
+
+            // Primary East-West Grid Arterials (Chicago Ave, Madison St, Roosevelt Rd, Cermak Rd)
+            const ewRoads = [-350, -250, -150, -80, -20, 40, 100, 180, 260, 360];
+            ewRoads.forEach(y => {
+                ctx.beginPath();
+                ctx.moveTo(-450, y);
+                ctx.lineTo(80, y);
+                ctx.stroke();
+            });
+
+            // Primary North-South Grid Arterials (Halsted St, Western Ave, Ashland Ave, State St)
+            const nsRoads = [-380, -300, -220, -140, -80, -20, 30, 70];
+            nsRoads.forEach(x => {
+                ctx.beginPath();
+                ctx.moveTo(x, -450);
+                ctx.lineTo(x, 450);
+                ctx.stroke();
+            });
+
+            // 7. DIAGONAL STREETS (Milwaukee Ave, Ogden Ave, Blue Island Ave)
+            ctx.lineWidth = 2;
+            // Milwaukee Ave (NW to SE)
+            ctx.beginPath();
+            ctx.moveTo(-350, -400);
+            ctx.lineTo(-20, -70);
+            ctx.stroke();
+
+            // Ogden Ave (SW to NE)
+            ctx.beginPath();
+            ctx.moveTo(-380, 220);
+            ctx.lineTo(-30, -40);
+            ctx.stroke();
+
+            // 8. LANDMARKS & BLIPS (GTA SA Radar Icons)
+            
+            // Willis / Sears Tower (The Loop)
+            drawBlip(-35, -10, '#38bdf8', 'fa-building', 'Willis Tower');
+            
+            // Millennium Park "The Bean" / Crown Fountain
+            drawBlip(40, -15, '#22c55e', 'fa-tree', 'Millennium Park');
+
+            // Navy Pier
+            drawBlip(160, -40, '#f59e0b', 'fa-ferry', 'Navy Pier');
+
+            // O'Hare International Airport (Far Northwest)
+            drawBlip(-380, -380, '#a855f7', 'fa-plane', "O'Hare Airport");
+
+            // Safehouse / Hood Location (West Side / South Side)
+            drawBlip(-100, 60, '#22c55e', 'fa-house', 'King SAMP Headquarters');
+
+            // Ammu-Nation / Armory
+            drawBlip(-140, -100, '#ef4444', 'fa-gun', 'Ammu-Nation Chicago');
+
+            ctx.restore();
+        }
+
+        // Helper function to draw GTA Radar Blips
+        function drawBlip(x, y, color, iconClass, label) {
+            ctx.save();
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x, y, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // Blip Label
+            ctx.font = '10px "VT323", monospace';
+            ctx.fillStyle = '#ffffff';
+            ctx.shadowColor = '#000000';
+            ctx.shadowBlur = 3;
+            ctx.fillText(label, x + 9, y + 3);
+            ctx.restore();
+        }
+
+        // Initial Map Render
+        setTimeout(() => {
+            resizeCanvas();
+        }, 100);
+
+        // Attach click sounds to interactive elements
+        document.querySelectorAll('button, a').forEach(elem => {
+            elem.addEventListener('click', () => {
+                if(!elem.getAttribute('onclick')) playClickSound();
+            });
+        });
+    </script>
+</body>
+</html>
